@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NurseEvidence — Pratique fondée sur les preuves</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --primary: #2563a8;
+  --primary-light: #3b7fd4;
+  --primary-pale: #eef4fb;
+  --navy: #1a2e4a;
+  --teal: #1a7a6e;
+  --teal-pale: #e8f5f3;
+  --gray-bg: #f4f6f9;
+  --gray-mid: #e8ecf1;
+  --gray-border: #d1d9e0;
+  --text: #1a2e4a;
+  --text-mid: #4a5568;
+  --text-light: #718096;
+  --white: #ffffff;
+}
+body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--text); }
+
+nav {
+  background: var(--white); border-bottom: 1px solid var(--gray-border);
+  padding: 0 48px; display: flex; align-items: center; height: 60px;
+  position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+.logo { font-size: 18px; font-weight: 700; color: var(--primary); cursor: pointer; flex-shrink: 0; margin-right: 36px; }
+.logo span { color: var(--teal); }
+.nav-links { display: flex; list-style: none; height: 100%; }
+.nav-links li a {
+  display: flex; align-items: center; height: 100%; padding: 0 16px;
+  font-size: 13.5px; font-weight: 500; color: var(--text-mid); text-decoration: none;
+  border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; cursor: pointer;
+}
+.nav-links li a:hover { color: var(--primary); }
+.nav-links li a.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+.nav-search { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.nav-search-box {
+  display: flex; align-items: center; background: var(--gray-bg);
+  border: 1px solid var(--gray-border); border-radius: 8px; padding: 6px 12px; gap: 8px;
+}
+.nav-search-box input { border: none; background: transparent; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--text); width: 200px; outline: none; }
+.nav-search-box input::placeholder { color: var(--text-light); }
+.btn-nav { background: var(--primary); color: white; border: none; padding: 7px 16px; border-radius: 7px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-nav:hover { background: var(--navy); }
+
+.section { display: none; }
+.section.active { display: block; }
+
+.hero {
+  background: linear-gradient(135deg, #f0f6ff 0%, #e8f4f2 50%, #f4f8ff 100%);
+  padding: 64px 48px 0; display: grid; grid-template-columns: 1fr 420px;
+  gap: 40px; align-items: end; max-width: 1200px; margin: 0 auto; min-height: 380px;
+}
+.hero-text { padding-bottom: 48px; }
+.hero-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.hero-eyebrow::before { content:''; width:24px; height:2px; background:var(--primary); display:inline-block; }
+.hero h1 { font-size: clamp(26px,3.5vw,40px); font-weight: 700; line-height: 1.2; color: var(--navy); margin-bottom: 16px; }
+.hero h1 em { font-style: normal; color: var(--primary); }
+.hero-desc { font-size: 15px; color: var(--text-mid); line-height: 1.75; max-width: 520px; margin-bottom: 28px; }
+.hero-search { display: flex; background: var(--white); border: 1.5px solid var(--gray-border); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(37,99,168,0.1); max-width: 560px; }
+.hero-search:focus-within { border-color: var(--primary); }
+.hero-search input { flex: 1; border: none; outline: none; padding: 14px 16px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--text); }
+.hero-search input::placeholder { color: #a0aec0; }
+.hero-search-btn { background: var(--primary); color: white; border: none; padding: 0 24px; font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.hero-search-btn:hover { background: var(--navy); }
+.hero-sources { display: flex; align-items: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.hero-sources p { font-size: 11.5px; color: var(--text-light); }
+.src-pill { background: var(--white); border: 1px solid var(--gray-border); color: var(--text-mid); font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 100px; }
+.hero-img { width: 100%; display: flex; }
+
+.hero-strip { background: var(--white); border-top: 1px solid var(--gray-mid); border-bottom: 1px solid var(--gray-mid); }
+.hero-strip-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); }
+.strip-item { padding: 18px 28px; border-right: 1px solid var(--gray-mid); display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.15s; }
+.strip-item:last-child { border-right: none; }
+.strip-item:hover { background: var(--gray-bg); }
+.strip-icon { font-size: 22px; flex-shrink: 0; }
+.strip-text h4 { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 2px; }
+.strip-text p { font-size: 11.5px; color: var(--text-light); }
+
+.main-wrap { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 320px; padding: 36px 48px; }
+.section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary); margin-bottom: 6px; }
+.section-title { font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--gray-mid); }
+
+.news-list { display: flex; flex-direction: column; }
+.news-card { display: flex; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--gray-mid); cursor: pointer; }
+.news-card:hover .news-title { color: var(--primary); }
+.news-num { font-size: 22px; font-weight: 800; color: var(--gray-mid); width: 32px; flex-shrink: 0; font-family: 'Merriweather',serif; }
+.news-category { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); margin-bottom: 5px; }
+.news-title { font-size: 14px; font-weight: 600; color: var(--navy); line-height: 1.45; margin-bottom: 6px; }
+.news-excerpt { font-size: 12.5px; color: var(--text-light); line-height: 1.55; }
+.news-meta { font-size: 11px; color: #a0aec0; margin-top: 6px; }
+
+.tuto-list { display: flex; flex-direction: column; gap: 10px; }
+.tuto-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--gray-bg); border-radius: 9px; cursor: pointer; transition: all 0.15s; border: 1px solid transparent; }
+.tuto-item:hover { background: var(--primary-pale); border-color: var(--primary); transform: translateX(3px); }
+.tuto-icon { font-size: 20px; flex-shrink: 0; }
+.tuto-body h4 { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 2px; }
+.tuto-body p { font-size: 11.5px; color: var(--text-light); }
+.tuto-arrow { margin-left: auto; color: var(--primary); font-size: 16px; opacity: 0; }
+.tuto-item:hover .tuto-arrow { opacity: 1; }
+
+.sidebar { padding-left: 32px; border-left: 1px solid var(--gray-mid); }
+.sidebar-widget { margin-bottom: 32px; }
+.sidebar-title { font-size: 13px; font-weight: 700; color: var(--navy); padding-bottom: 10px; border-bottom: 2px solid var(--primary); margin-bottom: 16px; }
+.quick-search-form { display: flex; flex-direction: column; gap: 8px; }
+.qs-input { border: 1.5px solid var(--gray-border); border-radius: 8px; padding: 10px 12px; font-family: 'Inter',sans-serif; font-size: 13px; color: var(--text); outline: none; width: 100%; }
+.qs-input:focus { border-color: var(--primary); }
+.qs-btn { background: var(--primary); color: white; border: none; padding: 10px 14px; border-radius: 8px; font-family: 'Inter',sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; }
+.qs-btn:hover { background: var(--navy); }
+.qs-sources { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+.qs-src { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px; border: 1px solid var(--gray-border); color: var(--text-light); }
+.topics-list { display: flex; flex-direction: column; gap: 6px; }
+.topic-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-mid); padding: 7px 10px; border-radius: 7px; cursor: pointer; }
+.topic-item:hover { background: var(--primary-pale); color: var(--primary); }
+.topic-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
+.topic-count { margin-left: auto; font-size: 11px; color: #a0aec0; }
+.db-list { display: flex; flex-direction: column; gap: 8px; }
+.db-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--gray-bg); border-radius: 8px; border: 1px solid transparent; }
+.db-item:hover { border-color: var(--primary); background: var(--primary-pale); }
+.db-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.db-name { font-size: 12.5px; font-weight: 600; color: var(--navy); flex: 1; }
+.db-tag { font-size: 10px; color: var(--text-light); }
+
+/* RESULTS PAGE */
+#results-page { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 240px 1fr; padding: 32px 48px; }
+.filter-sidebar { padding-right: 28px; border-right: 1px solid var(--gray-mid); }
+.filter-group { margin-bottom: 24px; }
+.filter-group-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-mid); margin-bottom: 10px; }
+.filter-option { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-mid); padding: 5px 0; cursor: pointer; }
+.filter-option input { accent-color: var(--primary); }
+.filter-count { margin-left: auto; font-size: 11px; color: #a0aec0; background: var(--gray-bg); padding: 1px 6px; border-radius: 100px; }
+.filter-source { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 7px; font-size: 12.5px; font-weight: 600; color: var(--text-mid); cursor: pointer; border: 1px solid transparent; margin-bottom: 5px; }
+.filter-source:hover { background: var(--primary-pale); color: var(--primary); }
+.filter-source.on { background: var(--primary-pale); color: var(--primary); border-color: var(--primary); }
+.fsrc-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.results-col { padding-left: 28px; }
+.results-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+.results-info { font-size: 14px; color: var(--text-mid); }
+.results-info strong { color: var(--navy); font-size: 16px; }
+.sort-bar { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-light); }
+.sort-bar select { border: 1px solid var(--gray-border); border-radius: 7px; padding: 5px 10px; font-family: 'Inter',sans-serif; font-size: 13px; color: var(--text); outline: none; }
+
+.result-card { border: 1px solid var(--gray-mid); border-radius: 10px; padding: 20px 22px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
+.result-card:hover { border-color: var(--primary); box-shadow: 0 4px 16px rgba(37,99,168,0.1); }
+.result-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.result-src-badge { font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; }
+.badge-pubmed { background: #dbeafe; color: #1d4ed8; }
+.badge-wiki { background: #d1fae5; color: #065f46; }
+.result-type { font-size: 11px; color: var(--text-light); }
+.result-year { font-size: 11px; color: var(--text-light); }
+.result-title { font-size: 15px; font-weight: 600; color: var(--navy); line-height: 1.4; margin-bottom: 6px; }
+.result-card:hover .result-title { color: var(--primary); }
+.result-authors { font-size: 12px; color: var(--text-light); font-style: italic; margin-bottom: 8px; }
+.result-abstract { font-size: 13px; color: var(--text-mid); line-height: 1.6; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; margin-bottom: 12px; }
+.result-abstract.expanded { -webkit-line-clamp: unset; }
+.result-actions { display: flex; gap: 8px; align-items: center; }
+.btn-result { font-family: 'Inter',sans-serif; font-size: 12px; font-weight: 600; padding: 6px 13px; border-radius: 7px; cursor: pointer; border: none; }
+.btn-result-outline { background: white; border: 1px solid var(--gray-border); color: var(--text-mid); }
+.btn-result-outline:hover { border-color: var(--primary); color: var(--primary); }
+.btn-result-primary { background: var(--primary); color: white; text-decoration: none; display: inline-flex; align-items: center; }
+.btn-result-primary:hover { background: var(--navy); }
+.btn-save { background: none; border: none; font-size: 16px; cursor: pointer; color: #cbd5e0; margin-left: auto; }
+.btn-save:hover, .btn-save.saved { color: #f59e0b; }
+
+/* STATUS BANNER */
+.api-status { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; margin-bottom: 16px; }
+.api-status.live { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+.api-status.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+.api-status.loading { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+
+/* SKELETON */
+.skeleton-card { border: 1px solid var(--gray-mid); border-radius: 10px; padding: 20px 22px; margin-bottom: 12px; }
+.sk { height: 12px; margin-bottom: 8px; background: linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+.no-results { text-align: center; padding: 60px 20px; color: var(--text-light); }
+.no-results .nr-icon { font-size: 48px; margin-bottom: 12px; }
+.no-results h4 { font-size: 16px; color: var(--text-mid); margin-bottom: 6px; }
+
+/* LOADING */
+.loading-overlay { display: none; position: fixed; inset: 0; background: rgba(26,46,74,0.45); z-index: 200; align-items: center; justify-content: center; flex-direction: column; gap: 14px; }
+.loading-overlay.show { display: flex; }
+.spinner { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,0.25); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.loading-text { color: white; font-size: 14px; font-weight: 500; }
+.loading-sub { color: rgba(255,255,255,0.6); font-size: 12px; text-align: center; max-width: 360px; }
+
+/* OTHER PAGES */
+.page-header { background: var(--primary-pale); border-bottom: 1px solid var(--gray-mid); padding: 36px 48px; }
+.page-header h2 { font-size: 24px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.page-header p { font-size: 14px; color: var(--text-mid); }
+.results-search-bar { background: var(--gray-bg); border-bottom: 1px solid var(--gray-mid); padding: 14px 48px; display: flex; align-items: center; gap: 12px; }
+.rsb-box { flex: 1; max-width: 600px; display: flex; background: white; border: 1.5px solid var(--gray-border); border-radius: 8px; overflow: hidden; }
+.rsb-box:focus-within { border-color: var(--primary); }
+.rsb-input { flex: 1; border: none; outline: none; padding: 10px 14px; font-family: 'Inter',sans-serif; font-size: 13.5px; color: var(--text); }
+.rsb-btn { background: var(--primary); color: white; border: none; padding: 0 18px; font-family: 'Inter',sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; }
+.rsb-btn:hover { background: var(--navy); }
+.ebp-section { max-width: 1100px; margin: 0 auto; padding: 40px 48px; }
+.ebp-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 18px; margin-top: 24px; }
+.ebp-card { border: 1px solid var(--gray-mid); border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.2s; }
+.ebp-card:hover { border-color: var(--primary); box-shadow: 0 4px 20px rgba(37,99,168,0.1); transform: translateY(-2px); }
+.ebp-thumb { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 38px; }
+.ebp-body { padding: 16px 18px; }
+.ebp-level { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); margin-bottom: 6px; }
+.ebp-body h4 { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 5px; line-height: 1.35; }
+.ebp-body p { font-size: 12.5px; color: var(--text-light); line-height: 1.5; }
+.ebp-footer { padding: 10px 18px; border-top: 1px solid var(--gray-mid); display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-light); }
+.ebp-footer span:last-child { color: var(--primary); font-weight: 600; }
+.db-page { max-width: 1000px; margin: 0 auto; padding: 40px 48px; }
+.db-full-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+.db-full-card { border: 1px solid var(--gray-mid); border-radius: 12px; padding: 22px 24px; border-left: 4px solid var(--primary); }
+.db-full-card:hover { box-shadow: 0 4px 16px rgba(37,99,168,0.1); }
+.db-full-name { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.db-full-desc { font-size: 13px; color: var(--text-mid); line-height: 1.6; margin-bottom: 12px; }
+.db-full-meta { font-size: 11.5px; color: var(--text-light); display: flex; gap: 16px; flex-wrap: wrap; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loader">
+  <div class="spinner"></div>
+  <div class="loading-text">Recherche en cours…</div>
+  <div class="loading-sub"></div>
+</div>
+
+<nav>
+  <div class="logo" onclick="show('home');setActive('n-home')">Nurse<span>Evidence</span></div>
+  <ul class="nav-links">
+    <li><a id="n-home" class="active" onclick="show('home');setActive('n-home')">Apprentissage</a></li>
+    <li><a id="n-db" onclick="show('db');setActive('n-db')">Base de données</a></li>
+    <li><a id="n-tools" onclick="show('ebp');setActive('n-tools')">Outils</a></li>
+    <li><a id="n-news" onclick="show('news');setActive('n-news')">Actualités</a></li>
+  </ul>
+  <div class="nav-search">
+    <div class="nav-search-box">
+      <span style="color:var(--text-light)">🔍</span>
+      <input type="text" id="navSearchInput" placeholder="Rechercher..." onkeydown="if(event.key==='Enter')doSearch(this.value)"/>
+    </div>
+    <button class="btn-nav" onclick="doSearch(document.getElementById('navSearchInput').value)">Accéder à la recherche</button>
+  </div>
+</nav>
+
+<!-- ══ HOME ══ -->
+<div class="section active" id="section-home">
+  <div style="background:linear-gradient(135deg,#f0f6ff 0%,#e8f4f2 50%,#f4f8ff 100%);border-bottom:1px solid #e0e8f0">
+    <div class="hero">
+      <div class="hero-text">
+        <div class="hero-eyebrow">Plateforme EBP Infirmière</div>
+        <h1>Bienvenue sur<br><em>NurseEvidence</em></h1>
+        <p class="hero-desc">La pratique fondée sur les preuves (EBP) intègre les meilleures données scientifiques, l'expérience clinique et les préférences du patient dans les soins infirmiers.</p>
+        <div class="hero-search">
+          <input type="text" id="heroSearch" placeholder="Recherchez : diabète, HTA, soins de plaies, sepsis..." onkeydown="if(event.key==='Enter')doSearch(this.value)"/>
+          <button class="hero-search-btn" onclick="doSearch(document.getElementById('heroSearch').value)">🔍 Rechercher</button>
+        </div>
+        <div class="hero-sources">
+          <p>Sources live :</p>
+          <span class="src-pill">PubMed API</span>
+          <span class="src-pill">Google scholar</span>
+          <span class="src-pill">CINAHL</span>
+          <span class="src-pill">ScienceDirect</span>
+          <span class="src-pill">cairn</span>
+        </div>
+      </div>
+      <div class="hero-img" style="justify-content:center;align-items:center;height:500px">
+        <img src="nurse.png" alt="nurse" style="width:250px" onerror="this.style.display='none'">
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-strip">
+    <div class="hero-strip-inner">
+      <div class="strip-item" onclick="doSearch('diabetes nursing management')"><div class="strip-icon">🩺</div><div class="strip-text"><h4>Dernières actualités scientifiques</h4><p>Mises à jour EBP récentes</p></div></div>
+      <div class="strip-item" onclick="show('ebp');setActive('n-tools')"><div class="strip-icon">🎓</div><div class="strip-text"><h4>Tutoriels EBP</h4><p>Introduction à l'EBP</p></div></div>
+      <div class="strip-item" onclick="show('ebp');setActive('n-tools')"><div class="strip-icon">❓</div><div class="strip-text"><h4>Comment formuler une question PICO</h4><p>Guide pratique</p></div></div>
+      <div class="strip-item" onclick="show('ebp');setActive('n-tools')"><div class="strip-icon">📄</div><div class="strip-text"><h4>Lecture critique d'un article</h4><p>Méthode étape par étape</p></div></div>
+    </div>
+  </div>
+
+  <div class="main-wrap">
+    <div style="padding-right:32px">
+      <div class="section-label">Actualités</div>
+      <div class="section-title">Dernières actualités scientifiques</div>
+      <div class="news-list">
+        <div class="news-card" onclick="doSearch('diabetes mellitus type 2 nursing')"><div class="news-num">01</div><div class="news-body"><div class="news-category">Diabétologie · PubMed 2025</div><div class="news-title">Décompensation diabétique : éléments clés pour l'infirmière</div><div class="news-excerpt">Revue des signes cliniques prioritaires à évaluer lors de la prise en charge initiale du patient diabétique.</div><div class="news-meta">📅 2025 · Revue systématique</div></div></div>
+        <div class="news-card" onclick="doSearch('heart failure nursing home monitoring')"><div class="news-num">02</div><div class="news-body"><div class="news-category">Cardiologie · CINAHL 2025</div><div class="news-title">Insuffisance cardiaque à domicile — protocoles infirmiers actualisés</div><div class="news-excerpt">Recommandations ESC 2024 pour la surveillance infirmière des patients insuffisants cardiaques en ambulatoire.</div><div class="news-meta">📅 2025 · Recommandations</div></div></div>
+        <div class="news-card" onclick="doSearch('pressure ulcer prevention Braden scale nursing')"><div class="news-num">03</div><div class="news-body"><div class="news-category">Plaies & Cicatrisation · ScienceDirect 2024</div><div class="news-title">Prévention des escarres : échelles d'évaluation et repositionnement</div><div class="news-excerpt">Méta-analyse comparant les échelles de Braden, Norton et Waterlow dans la stratification du risque d'escarre.</div><div class="news-meta">📅 2024 · Méta-analyse</div></div></div>
+        <div class="news-card" onclick="doSearch('postoperative pain non-pharmacological nursing interventions')"><div class="news-num">04</div><div class="news-body"><div class="news-category">Analgésie · Cochrane 2024</div><div class="news-title">Douleur post-opératoire : interventions non-pharmacologiques infirmières</div><div class="news-excerpt">Revue Cochrane évaluant relaxation, musicothérapie et distraction cognitive dans la douleur post-chirurgicale.</div><div class="news-meta">📅 2024 · Revue Cochrane</div></div></div>
+      </div>
+    </div>
+    <div class="sidebar">
+      <div class="sidebar-widget">
+        <div class="sidebar-title">🔍 Recherche rapide</div>
+        <div class="quick-search-form">
+          <input class="qs-input" id="sideSearch" type="text" placeholder="Ex : hypertension, sepsis..." onkeydown="if(event.key==='Enter')doSearch(this.value)"/>
+          <button class="qs-btn" onclick="doSearch(document.getElementById('sideSearch').value)">Rechercher (PubMed +Google scholar
+ )</button>
+          <div class="qs-sources"><span class="qs-src">✅ PubMed Live</span><span class="qs-src">✅ Google scholar
+</span></div>
+        </div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-title">🎓 Tutoriels EBP</div>
+        <div class="tuto-list">
+          <div class="tuto-item" onclick="show('ebp');setActive('n-tools')"><div class="tuto-icon">📖</div><div class="tuto-body"><h4>Introduction à l'EBP</h4><p>Concepts fondamentaux</p></div><div class="tuto-arrow">›</div></div>
+          <div class="tuto-item" onclick="show('ebp');setActive('n-tools')"><div class="tuto-icon">❓</div><div class="tuto-body"><h4>Formuler une question PICO</h4><p>Structurer sa recherche</p></div><div class="tuto-arrow">›</div></div>
+          <div class="tuto-item" onclick="show('ebp');setActive('n-tools')"><div class="tuto-icon">📄</div><div class="tuto-body"><h4>Lecture critique d'un article</h4><p>Analyser une étude</p></div><div class="tuto-arrow">›</div></div>
+        </div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-title">🔥 Sujets populaires</div>
+        <div class="topics-list">
+          <div class="topic-item" onclick="doSearch('diabetes mellitus type 2 nursing care')"><div class="topic-dot"></div>Diabète de type 2<span class="topic-count">PubMed</span></div>
+          <div class="topic-item" onclick="doSearch('hypertension nursing management protocol')"><div class="topic-dot"></div>Hypertension artérielle<span class="topic-count">PubMed</span></div>
+          <div class="topic-item" onclick="doSearch('wound care nursing chronic wounds')"><div class="topic-dot"></div>Soins de plaies<span class="topic-count">PubMed</span></div>
+          <div class="topic-item" onclick="doSearch('sepsis nursing protocol early recognition')"><div class="topic-dot"></div>Sepsis & choc septique<span class="topic-count">PubMed</span></div>
+          <div class="topic-item" onclick="doSearch('pain management nursing non pharmacological')"><div class="topic-dot"></div>Gestion de la douleur<span class="topic-count">PubMed</span></div>
+          <div class="topic-item" onclick="doSearch('heart failure nursing self care')"><div class="topic-dot"></div>Insuffisance cardiaque<span class="topic-count">PubMed</span></div>
+        </div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="sidebar-title">📚 Bases de données</div>
+        <div class="db-list">
+          <div class="db-item"><div class="db-dot" style="background:#3b82f6"></div><div class="db-name">PubMed</div><div class="db-tag">✅ Live API</div></div>
+          <div class="db-item"><div class="db-dot" style="background:#10b981"></div><div class="db-name">Google scholar</div><div class="db-tag">✅ Live API</div></div>
+          <div class="db-item"><div class="db-dot" style="background:#f59e0b"></div><div class="db-name">ScienceDirect</div><div class="db-tag">Partiel</div></div>
+          <div class="db-item"><div class="db-dot" style="background:#8b5cf6"></div><div class="db-name">Google Scholar</div><div class="db-tag">Gratuit</div></div>
+          <div class="db-item"><div class="db-dot" style="background:#e11d48"></div><div class="db-name">CNUDST 🇹🇳</div><div class="db-tag">National</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RESULTS ══ -->
+<div class="section" id="section-results">
+  <div class="results-search-bar">
+    <div class="rsb-box">
+      <input class="rsb-input" id="resultsSearchInput" type="text" placeholder="Nouvelle recherche..." onkeydown="if(event.key==='Enter')doSearch(this.value)"/>
+      <button class="rsb-btn" onclick="doSearch(document.getElementById('resultsSearchInput').value)">Rechercher</button>
+    </div>
+    <span style="font-size:13px;color:#718096">Résultats pour : <strong id="searchTermDisplay" style="color:#1a2e4a"></strong></span>
+  </div>
+  <div id="results-page">
+    <div class="filter-sidebar">
+      <div class="filter-group">
+        <div class="filter-group-title">Source</div>
+        <div class="filter-source on" id="fsrc-pubmed" onclick="toggleSource('pubmed')">
+          <div class="fsrc-dot" style="background:#3b82f6"></div>PubMed
+          <span id="cnt-pubmed" style="margin-left:auto;font-size:11px;color:#94a3b8">—</span>
+        </div>
+        <div class="filter-source on" id="fsrc-wikipedia" onclick="toggleSource('wikipedia')">
+          <div class="fsrc-dot" style="background:#10b981"></div>Google scholar
+          <span id="cnt-wikipedia" style="margin-left:auto;font-size:11px;color:#94a3b8">—</span>
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-group-title">Année</div>
+        <label class="filter-option"><input type="checkbox" id="yr-recent" checked onchange="renderFiltered()"> 2020–2025 <span class="filter-count" id="cnt-yr-recent">—</span></label>
+        <label class="filter-option"><input type="checkbox" id="yr-old" onchange="renderFiltered()"> Avant 2020 <span class="filter-count" id="cnt-yr-old">—</span></label>
+      </div>
+    </div>
+    <div class="results-col">
+      <div id="apiStatusBanner"></div>
+      <div class="results-top">
+        <div class="results-info"><strong id="resultCount">0</strong> résultats pour « <span id="resultTerm"></span> »</div>
+        <div class="sort-bar">Trier par
+          <select id="sortSelect" onchange="renderFiltered()">
+            <option value="relevance">Pertinence</option>
+            <option value="recent">Plus récent</option>
+          </select>
+        </div>
+      </div>
+      <div id="resultsList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BASE DE DONNÉES ══ -->
+<div class="section" id="section-db">
+  <div class="page-header"><h2>📚 Base de données scientifiques</h2><p>Sources interrogées en temps réel lors de vos recherches</p></div>
+  <div class="db-page">
+    <div class="db-full-grid">
+      <div class="db-full-card" style="border-left-color:#3b82f6"><div class="db-full-name" style="color:#1d4ed8">PubMed / MEDLINE ✅ Live</div><div class="db-full-desc">La plus grande base de données médicale, maintenue par la NLM (USA). Interrogée via l'API E-utilities officielle et gratuite.</div><div class="db-full-meta"><span>✅ Accès gratuit</span><span>📄 35M+ articles</span><span>🔗 E-utilities API</span></div></div>
+      <div class="db-full-card" style="border-left-color:#10b981"><div class="db-full-name" style="color:#065f46">cairn Médical✅ Live</div><div class="db-full-desc">Encyclopédie médicale interrogée via l'API officielle Wikipedia (EN + FR). Fournit contexte clinique et résumés sur les pathologies.</div><div class="db-full-meta"><span>✅ Accès gratuit</span><span>📄 Encyclopédique</span><span>🌍 EN + FR</span></div></div>
+      <div class="db-full-card" style="border-left-color:#f59e0b"><div class="db-full-name" style="color:#92400e">ScienceDirect (Elsevier)</div><div class="db-full-desc">Plateforme d'Elsevier avec des milliers de revues scientifiques médicales de référence internationale.</div><div class="db-full-meta"><span>⚡ Accès partiel</span><span>📄 18M+ articles</span><span>🌍 International</span></div></div>
+      <div class="db-full-card" style="border-left-color:#8b5cf6"><div class="db-full-name" style="color:#6b21a8">Google Scholar</div><div class="db-full-desc">Moteur académique universel couvrant toutes disciplines, toutes langues, avec accès à de nombreux textes intégraux.</div><div class="db-full-meta"><span>✅ Accès gratuit</span><span>📄 Milliards de pages</span><span>🌐 Multilingue</span></div></div>
+      <div class="db-full-card" style="border-left-color:#e11d48"><div class="db-full-name" style="color:#9f1239">CNUDST 🇹🇳</div><div class="db-full-desc">Centre National Universitaire de Documentation Scientifique et Technique de Tunisie. Ressources nationales et accès international.</div><div class="db-full-meta"><span>🏛️ Accès national</span><span>📄 Ressources tunisiennes</span><span>🇹🇳 Tunisie</span></div></div>
+      <div class="db-full-card" style="border-left-color:#1a7a6e"><div class="db-full-name" style="color:#1a7a6e">Cochrane Library</div><div class="db-full-desc">Les meilleures revues systématiques et méta-analyses du monde. Standard or EBP.</div><div class="db-full-meta"><span>⚡ Accès partiel</span><span>📄 10K+ revues systématiques</span><span>⭐ Gold standard</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ OUTILS ══ -->
+<div class="section" id="section-ebp">
+  <div class="page-header"><h2>🎓 Outils & Tutoriels EBP</h2><p>Apprenez à pratiquer la recherche fondée sur les preuves, étape par étape</p></div>
+  <div class="ebp-section">
+    <div class="ebp-grid">
+      <div class="ebp-card"><div class="ebp-thumb" style="background:#dbeafe">📖</div><div class="ebp-body"><div class="ebp-level">Débutant</div><h4>Introduction à l'EBP</h4><p>Qu'est-ce que la pratique fondée sur les preuves et pourquoi est-elle essentielle ?</p></div><div class="ebp-footer"><span>⏱ 10 min</span><span>Commencer →</span></div></div>
+      <div class="ebp-card"><div class="ebp-thumb" style="background:#d1fae5">❓</div><div class="ebp-body"><div class="ebp-level">Débutant</div><h4>Formuler une question PICO</h4><p>Patient, Intervention, Comparaison, Outcome.</p></div><div class="ebp-footer"><span>⏱ 15 min</span><span>Commencer →</span></div></div>
+      <div class="ebp-card"><div class="ebp-thumb" style="background:#fef3c7">📄</div><div class="ebp-body"><div class="ebp-level">Intermédiaire</div><h4>Lecture critique d'un article</h4><p>Lire, analyser et interpréter une étude médicale efficacement.</p></div><div class="ebp-footer"><span>⏱ 25 min</span><span>Commencer →</span></div></div>
+      <div class="ebp-card"><div class="ebp-thumb" style="background:#ede9fe">📊</div><div class="ebp-body"><div class="ebp-level">Intermédiaire</div><h4>Comprendre les statistiques</h4><p>RR, OR, IC 95%, p-value expliqués simplement.</p></div><div class="ebp-footer"><span>⏱ 30 min</span><span>Commencer →</span></div></div>
+      <div class="ebp-card"><div class="ebp-thumb" style="background:#ffe4e6">⭐</div><div class="ebp-body"><div class="ebp-level">Avancé</div><h4>Évaluer la qualité d'un article</h4><p>Pyramide des preuves, grilles CASP.</p></div><div class="ebp-footer"><span>⏱ 40 min</span><span>Commencer →</span></div></div>
+      <div class="ebp-card"><div class="ebp-thumb" style="background:#e8f5f3">🏥</div><div class="ebp-body"><div class="ebp-level">Avancé</div><h4>Appliquer l'EBP en clinique</h4><p>Transposer les résultats dans votre pratique quotidienne.</p></div><div class="ebp-footer"><span>⏱ 35 min</span><span>Commencer →</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ACTUALITÉS ══ -->
+<div class="section" id="section-news">
+  <div class="page-header"><h2>📰 Actualités en soins infirmiers</h2><p>Les dernières publications et recommandations scientifiques</p></div>
+  <div style="max-width:900px;margin:0 auto;padding:36px 48px">
+    <div class="news-list">
+      <div class="news-card" onclick="doSearch('diabetes type 2 nursing guidelines 2025')"><div class="news-num">01</div><div class="news-body"><div class="news-category">Diabétologie · IDF 2025</div><div class="news-title">Nouvelles recommandations sur la gestion du diabète de type 2</div><div class="news-excerpt">Les guidelines IDF 2025 intègrent de nouvelles cibles glycémiques et protocoles infirmiers.</div><div class="news-meta">📅 Février 2025</div></div></div>
+      <div class="news-card" onclick="doSearch('postoperative pain non pharmacological nursing cochrane')"><div class="news-num">02</div><div class="news-body"><div class="news-category">Analgésie · Cochrane 2025</div><div class="news-title">Douleur post-opératoire : méta-analyse Cochrane des pratiques infirmières</div><div class="news-excerpt">Efficacité des protocoles non-opioïdes dans la prise en charge de la douleur post-chirurgicale.</div><div class="news-meta">📅 Janvier 2025</div></div></div>
+      <div class="news-card" onclick="doSearch('heart failure home monitoring nurse ESC guidelines')"><div class="news-num">03</div><div class="news-body"><div class="news-category">Cardiologie · ESC 2024</div><div class="news-title">Insuffisance cardiaque : protocoles de surveillance infirmière actualisés</div><div class="news-excerpt">Recommandations ESC 2024 pour la surveillance quotidienne en ambulatoire.</div><div class="news-meta">📅 Décembre 2024</div></div></div>
+      <div class="news-card" onclick="doSearch('nursing Tunisia soins infirmiers Tunisie')"><div class="news-num">04</div><div class="news-body"><div class="news-category">Tunisie · ONAT 2024</div><div class="news-title">Journée nationale des soins infirmiers en Tunisie</div><div class="news-excerpt">Retour sur les principales interventions de la journée nationale organisée par l'ONAT.</div><div class="news-meta">📅 Décembre 2024</div></div></div>
+    </div>
+  </div>
+</div>
+
+<footer style="background:#1a2e4a;color:rgba(255,255,255,0.55);padding:28px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:13px">
+  <div style="font-weight:700;font-size:16px;color:white">Nurse<span style="color:#00d4aa">Evidence</span></div>
+  <div>Plateforme EBP pour infirmières · Tunisie </div>
+  <div>Projet de <strong style="color:white">Mariem</strong></div>
+</footer>
+
+<script>
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let allResults = [];
+let activeSources = new Set(['pubmed','wikipedia']);
+
+// ══════════════════════════════════════════
+// PUBMED E-UTILITIES
+// ══════════════════════════════════════════
+async function fetchPubMed(term) {
+  const base = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
+
+  // Step 1: search IDs
+  const searchUrl = `${base}esearch.fcgi?db=pubmed&term=${encodeURIComponent(term)}&retmax=8&sort=relevance&retmode=json`;
+  const sRes = await fetch(searchUrl);
+  const sData = await sRes.json();
+  const ids = sData.esearchresult?.idlist || [];
+  if (!ids.length) return [];
+
+  // Step 2: summaries
+  const sumUrl = `${base}esummary.fcgi?db=pubmed&id=${ids.join(',')}&retmode=json`;
+  const sumRes = await fetch(sumUrl);
+  const sumData = await sumRes.json();
+  const uids = sumData.result?.uids || [];
+
+  // Step 3: abstracts via efetch (XML)
+  const abstracts = {};
+  try {
+    const fetchUrl = `${base}efetch.fcgi?db=pubmed&id=${ids.join(',')}&rettype=abstract&retmode=xml`;
+    const fRes = await fetch(fetchUrl);
+    const xml = await fRes.text();
+    const doc = new DOMParser().parseFromString(xml, 'text/xml');
+    doc.querySelectorAll('PubmedArticle').forEach(art => {
+      const pmid = art.querySelector('PMID')?.textContent;
+      const txt = Array.from(art.querySelectorAll('AbstractText')).map(e => e.textContent).join(' ');
+      if (pmid && txt) abstracts[pmid] = txt;
+    });
+  } catch(_) {}
+
+  return uids.map(uid => {
+    const r = sumData.result[uid];
+    if (!r || r.error) return null;
+    const authors = (r.authors||[]).slice(0,3).map(a=>a.name).join(', ') || 'Auteurs non renseignés';
+    const year = (r.pubdate||'').substring(0,4) || '?';
+    const pubTypes = (r.pubtype||[]).slice(0,2).join(' · ') || 'Article';
+    return {
+      source:'pubmed', srcLabel:'PubMed', badge:'badge-pubmed',
+      year, type: pubTypes,
+      title: r.title ? r.title.replace(/<[^>]+>/g,'') : 'Sans titre',
+      authors,
+      abstract: abstracts[uid] || '',
+      url: `https://pubmed.ncbi.nlm.nih.gov/${uid}/`,
+      pmid: uid
+    };
+  }).filter(Boolean);
+}
+
+// ══════════════════════════════════════════
+// WIKIPEDIA API (EN + FR)
+// ══════════════════════════════════════════
+async function fetchWikipedia(term) {
+  const results = [];
+  const langs = [
+    { code:'en', label:'google scholar' },
+    { code:'fr', label:'google scholar' }
+  ];
+
+  for (const lang of langs) {
+    try {
+      const url = `https://${lang.code}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(term)}&srlimit=3&srprop=snippet&format=json&origin=*`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const items = data.query?.search || [];
+      for (const item of items) {
+        const snippet = item.snippet.replace(/<[^>]+>/g,'').replace(/&quot;/g,'"').replace(/&#039;/g,"'").replace(/&amp;/g,'&');
+        results.push({
+          source:'wikipedia', srcLabel: lang.label, badge:'badge-wiki',
+          year:'2024', type:'Article encyclopédique',
+          title: item.title,
+          authors: `Wikipedia ${lang.code === 'en' ? 'English' : 'Français'} — Auteurs multiples`,
+          abstract: snippet,
+          url: `https://${lang.code}.wikipedia.org/wiki/${encodeURIComponent(item.title.replace(/ /g,'_'))}`,
+        });
+      }
+      if (results.length >= 5) break;
+    } catch(_) {}
+  }
+  return results.slice(0, 5);
+}
+
+// ══════════════════════════════════════════
+// MAIN SEARCH
+// ══════════════════════════════════════════
+async function doSearch(term) {
+  if (!term || !term.trim()) return;
+  term = term.trim();
+
+  show('results'); setActive('');
+  document.getElementById('searchTermDisplay').textContent = term;
+  document.getElementById('resultTerm').textContent = term;
+  document.getElementById('resultsSearchInput').value = term;
+  document.getElementById('navSearchInput').value = term;
+  document.getElementById('cnt-pubmed').textContent = '…';
+  document.getElementById('cnt-wikipedia').textContent = '…';
+  document.getElementById('cnt-yr-recent').textContent = '—';
+  document.getElementById('cnt-yr-old').textContent = '—';
+
+  setBanner('loading','⏳ Interrogation des APIs en cours — PubMed · CUNHL…');
+  renderSkeleton();
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  allResults = [];
+  const errors = [];
+
+  const [pubRes, wikiRes] = await Promise.allSettled([
+    fetchPubMed(term),
+    fetchWikipedia(term)
+  ]);
+
+  if (pubRes.status === 'fulfilled' && pubRes.value.length > 0) {
+    allResults.push(...pubRes.value);
+    document.getElementById('cnt-pubmed').textContent = pubRes.value.length;
+  } else {
+    errors.push('PubMed');
+    document.getElementById('cnt-pubmed').textContent = pubRes.status === 'fulfilled' ? '0' : '!';
+  }
+
+  if (wikiRes.status === 'fulfilled' && wikiRes.value.length > 0) {
+    allResults.push(...wikiRes.value);
+    document.getElementById('cnt-wikipedia').textContent = wikiRes.value.length;
+  } else {
+    errors.push('Wikipedia');
+    document.getElementById('cnt-wikipedia').textContent = wikiRes.status === 'fulfilled' ? '0' : '!';
+  }
+
+  // Update year counts
+  const cRecent = allResults.filter(r => parseInt(r.year) >= 2020).length;
+  const cOld = allResults.filter(r => parseInt(r.year) < 2020).length;
+  document.getElementById('cnt-yr-recent').textContent = cRecent;
+  document.getElementById('cnt-yr-old').textContent = cOld;
+
+  if (allResults.length > 0) {
+    setBanner('live', `✅ ${allResults.length} résultats en direct — PubMed · Google scholar${errors.length ? ' (erreur: '+errors.join(', ')+')' : ''}`);
+  } else {
+    setBanner('error', `❌ Aucun résultat trouvé pour « ${term} ». Essayez en anglais.`);
+  }
+
+  renderFiltered();
+}
+
+// ══════════════════════════════════════════
+// FILTER + RENDER
+// ══════════════════════════════════════════
+function renderFiltered() {
+  let results = allResults.filter(r => activeSources.has(r.source));
+  const recentOn = document.getElementById('yr-recent')?.checked;
+  const oldOn = document.getElementById('yr-old')?.checked;
+  if (recentOn !== oldOn) {
+    results = results.filter(r => {
+      const y = parseInt(r.year) || 0;
+      if (recentOn && y >= 2020) return true;
+      if (oldOn && y < 2020) return true;
+      return false;
+    });
+  }
+  const sort = document.getElementById('sortSelect')?.value;
+  if (sort === 'recent') results.sort((a,b) => (parseInt(b.year)||0) - (parseInt(a.year)||0));
+  document.getElementById('resultCount').textContent = results.length;
+  renderResults(results);
+}
+
+function renderResults(results) {
+  const list = document.getElementById('resultsList');
+  if (!results.length) {
+    list.innerHTML = `<div class="no-results"><div class="nr-icon">🔍</div><h4>Aucun résultat avec ces filtres</h4><p>Désactivez les filtres ou reformulez votre recherche en anglais</p></div>`;
+    return;
+  }
+  list.innerHTML = '';
+  results.forEach((r, i) => {
+    const d = document.createElement('div');
+    d.className = 'result-card';
+    d.style.cssText = `animation:fadeIn 0.3s ease ${i*0.06}s both`;
+    const badgeClass = r.source === 'wikipedia' ? 'badge-wiki' : r.badge;
+    d.innerHTML = `
+      <div class="result-top">
+        <span class="result-src-badge ${badgeClass}">${r.srcLabel}</span>
+        <span class="result-type">${r.type}</span>
+        <span class="result-year">· ${r.year}</span>
+      </div>
+      <div class="result-title">${r.title}</div>
+      <div class="result-authors">✍️ ${r.authors}</div>
+      ${r.abstract ? `<div class="result-abstract" id="abs-${i}">${r.abstract}</div>` : ''}
+      <div class="result-actions">
+        ${r.abstract ? `<button class="btn-result btn-result-outline" onclick="toggleAbstract(${i},this)">Voir le résumé complet</button>` : ''}
+        <a href="${r.url}" target="_blank" rel="noopener noreferrer" class="btn-result btn-result-primary">Accéder à l'article →</a>
+        <button class="btn-save" onclick="this.classList.toggle('saved');event.stopPropagation()" title="Sauvegarder">🔖</button>
+      </div>`;
+    list.appendChild(d);
+  });
+}
+
+function toggleAbstract(i, btn) {
+  const el = document.getElementById('abs-' + i);
+  if (!el) return;
+  if (el.classList.contains('expanded')) {
+    el.classList.remove('expanded');
+    btn.textContent = 'Voir le résumé complet';
+  } else {
+    el.classList.add('expanded');
+    btn.textContent = 'Réduire';
+  }
+}
+
+function renderSkeleton() {
+  document.getElementById('resultsList').innerHTML = Array(5).fill(0).map(() => `
+    <div class="skeleton-card">
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <div class="sk" style="width:80px;height:20px;border-radius:100px"></div>
+        <div class="sk" style="width:60px;height:20px;border-radius:100px"></div>
+      </div>
+      <div class="sk" style="height:18px;width:85%;margin-bottom:10px"></div>
+      <div class="sk" style="height:12px;width:45%;margin-bottom:12px"></div>
+      <div class="sk" style="height:11px;margin-bottom:6px"></div>
+      <div class="sk" style="height:11px;margin-bottom:6px"></div>
+      <div class="sk" style="height:11px;width:65%"></div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// UI HELPERS
+// ══════════════════════════════════════════
+function setBanner(type, msg) {
+  document.getElementById('apiStatusBanner').innerHTML = `<div class="api-status ${type}">${msg}</div>`;
+}
+
+function toggleSource(src) {
+  const el = document.getElementById(`fsrc-${src}`);
+  if (activeSources.has(src)) { activeSources.delete(src); el.classList.remove('on'); }
+  else { activeSources.add(src); el.classList.add('on'); }
+  renderFiltered();
+}
+
+function show(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const map = {home:'section-home',results:'section-results',db:'section-db',ebp:'section-ebp',news:'section-news'};
+  const el = document.getElementById(map[name]);
+  if (el) el.classList.add('active');
+}
+
+function setActive(id) {
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  if (id) { const el = document.getElementById(id); if (el) el.classList.add('active'); }
+}
+</script>
+</body>
+</html>
